@@ -237,7 +237,7 @@ def generate_report(name, birth_date):
         report = f"**Relatório Numerológico Cabalístico**\n"
         report += f"Nome: {name}\n"
         report += f"Data de Nascimento (Gregoriana): {birth_date}\n"
-        report += f"Data de Nascimento (Hebraica): {hebrew_date}\n"
+        # report += f"Data de Nascimento (Hebraica): {hebrew_date}\n"
         report += f"\n**Números da Sorte**:\n"
         report += f" - Primários: {', '.join(map(str, lucky_numbers))}\n"
         report += f" - Secundários: {', '.join(map(str, secondary_numbers))}\n"
