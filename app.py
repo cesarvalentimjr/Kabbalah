@@ -218,6 +218,8 @@ def get_hebrew_date_and_sign(birth_date):
         month = hdate.month
         hebrew_date = f"{hdate.day} de {hdate.month_name} de {hdate.year}"
         return hebrew_date, hebrew_signs.get(month, {"signo": "Desconhecido", "tribo": "", "letra": "", "qualidade": ""})
+    except AttributeError as e:
+        return f"Erro na conversão: Problema com o módulo pyluach ({str(e)})", {"signo": "Desconhecido", "tribo": "", "letra": "", "qualidade": ""}
     except Exception as e:
         return f"Erro na conversão: {str(e)}", {"signo": "Desconhecido", "tribo": "", "letra": "", "qualidade": ""}
 
