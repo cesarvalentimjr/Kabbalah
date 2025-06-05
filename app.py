@@ -1,7 +1,11 @@
 import streamlit as st
 from datetime import datetime
 import re
-from hdate import HDate
+from hdate import HDateInfo
+from hdate.translator import set_language
+
+# Definir o idioma para as datas hebraicas (use "he" para hebraico ou "en" para inglês)
+set_language("he")  # Ajuste para "en" se preferir em inglês
 
 # Dicionário com valores numéricos das letras hebraicas
 hebrew_values = {
@@ -214,9 +218,9 @@ def get_hebrew_date_and_sign(birth_date):
     """Converte a data gregoriana para o calendário hebraico e retorna a data e o signo."""
     try:
         date = datetime.strptime(birth_date, '%d/%m/%Y')
-        hdate = HDate(gdate=date)
-        month = hdate.month
-        hebrew_date = f"{hdate.day} de {hdate.month_name()} de {hdate.year}"
+        hdate = HDateInfo(date)
+        month = hdate.month  # Obtém o mês hebraico
+        hebrew_date = f"{hdate.day} de {hdate.month_name} de {hdate.year}"
         return hebrew_date, hebrew_signs.get(month, {"signo": "Desconhecido", "tribo": "", "letra": "", "qualidade": ""})
     except Exception as e:
         return f"Erro na conversão: {str(e)}", {"signo": "Desconhecido", "tribo": "", "letra": "", "qualidade": ""}
@@ -277,11 +281,7 @@ def main():
     """, unsafe_allow_html=True)
 
     # Exibir a imagem da Árvore da Vida
-    st.image(
-        "https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPOSITORIO/main/Kabbalah/lifetree.png",
-        caption="Ilustração da Árvore da Vida Cabalística",
-        use_column_width=True
-    )  # Atualize o URL com o link bruto do GitHub[](https://medium.com/analytics-vidhya/ep5-adding-media-files-in-our-streamlit-web-app-74564af03642)
+    st.image("Kabbalah/lifetree.png", caption="Ilustração da Árvore da Vida Cabalística", use_column_width=True) # Atualize o URL com o link bruto do GitHub
 
     # Layout com duas colunas
     col1, col2 = st.columns([1, 2])
