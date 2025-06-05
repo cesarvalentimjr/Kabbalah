@@ -1,2 +1,2 @@
 streamlit
-hdate
+hdate==0.10.4  # Substitua pela versão mais recente ou estável
