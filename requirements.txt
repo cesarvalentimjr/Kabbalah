@@ -1,2 +1,2 @@
-straemlit
+streamlit
 hdate
