@@ -1,2 +1,2 @@
 streamlit
-pyluach
+pyluach==2.2.0  # Substitua pela versão mais recente ou estável
