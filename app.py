@@ -279,10 +279,10 @@ def main():
     """, unsafe_allow_html=True)
 
     # Exibir a imagem da Árvore da Vida
-    st.image(lifetree.png",
-        caption="Ilustração da Árvore da Vida Cabalística",
-        use_container_width=True
-    )  # Substitua SEU_USUARIO e SEU_REPOSITORIO pelo seu usuário e repositório
+    #st.image(lifetree.png",
+      #  caption="Ilustração da Árvore da Vida Cabalística",
+       # use_container_width=True
+   # )  # Substitua SEU_USUARIO e SEU_REPOSITORIO pelo seu usuário e repositório
 
     # Layout com duas colunas
     col1, col2 = st.columns([1, 2])
