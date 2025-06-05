@@ -1,7 +1,6 @@
 import streamlit as st
 from datetime import datetime
 import re
-from hdate import HDate
 
 # Dicionário com valores numéricos das letras hebraicas
 hebrew_values = {
@@ -92,196 +91,16 @@ paths = {
     32: {"letra": "Tav (ת)", "conexão": "Yesod-Malkhut", "significado": "Completude, verdade manifestada"}
 }
 
-# Signos hebraicos por mês hebraico
-hebrew_signs = {
-    1: {"signo": "Nisan (Áries)", "tribo": "Judá", "letra": "Heh (ה)", "qualidade": "Liderança"},
-    2: {"signo": "Iyar (Touro)", "tribo": "Issacar", "letra": "Vav (ו)", "qualidade": "Estabilidade"},
-    3: {"signo": "Sivan (Gêmeos)", "tribo": "Zebulom", "letra": "Zayin (ז)", "qualidade": "Comunicação"},
-    4: {"signo": "Tammuz (Câncer)", "tribo": "Rúben", "letra": "Chet (ח)", "qualidade": "Sensibilidade"},
-    5: {"signo": "Av (Leão)", "tribo": "Simeão", "letra": "Tet (ט)", "qualidade": "Coragem"},
-    6: {"signo": "Elul (Virgem)", "tribo": "Gad", "letra": "Yud (י)", "qualidade": "Detalhismo"},
-    7: {"signo": "Tishrei (Libra)", "tribo": "Efraim", "letra": "Lamed (ל)", "qualidade": "Equilíbrio"},
-    8: {"signo": "Cheshvan (Escorpião)", "tribo": "Manassés", "letra": "Nun (נ)", "qualidade": "Transformação"},
-    9: {"signo": "Kislev (Sagitário)", "tribo": "Benjamim", "letra": "Samech (ס)", "qualidade": "Otimismo"},
-    10: {"signo": "Tevet (Capricórnio)", "tribo": "Dan", "letra": "Ayin (ע)", "qualidade": "Ambição"},
-    11: {"signo": "Shevat (Aquário)", "tribo": "Asher", "letra": "Tzadi (צ)", "qualidade": "Inovação"},
-    12: {"signo": "Adar I (Peixes)", "tribo": "Naftali", "letra": "Kuf (ק)", "qualidade": "Compaixão"},
-    13: {"signo": "Adar II (Peixes)", "tribo": "Naftali", "letra": "Kuf (ק)", "qualidade": "Compaixão"}
-}
+# Signos hebraicos por mês hebraico (aproximação manual)
+    """Converte a data gregoriana para o calendário hebraico e retorna a data e o signo (aproximação manual)."""
+    month = int(birth_date.split('/')[1])
+    hebrew_date = f"Aproximado: {birth_date} (baseado no mês gregoriano)"
+    return hebrew_date, hebrew_signs.get(month, {"signo": "Desconhecido", "tribo": "", "letra": "", "qualidade": ""})
 
-def validate_date(birth_date):
-    """Valida o formato da data DD/MM/YYYY."""
-    pattern = r'^\d{2}/\d{2}/\d{4}$'
-    if not re.match(pattern, birth_date):
-        raise ValueError("Data deve estar no formato DD/MM/YYYY")
-    try:
-        datetime.strptime(birth_date, '%d/%m/%Y')
-    except ValueError:
-        raise ValueError("Data inválida")
-    return True
-
-def transliterate_name(name):
-    """Translitera um nome em português para letras hebraicas."""
-    name = name.lower().replace(' ', '')
-    hebrew_name = ""
-    i = 0
-    while i < len(name):
-        if i + 1 < len(name) and name[i:i+2] in transliteration_map:
-            hebrew_name += transliteration_map[name[i:i+2]]
-            i += 2
-        else:
-            hebrew_name += transliteration_map.get(name[i], 'א')
-            i += 1
-    return hebrew_name
-
-def analyze_hebrew_letters(hebrew_name):
-    """Analisa as letras hebraicas predominantes no nome."""
-    letter_count = {}
-    for letter in hebrew_name:
-        letter_count[letter] = letter_count.get(letter, 0) + 1
-    if letter_count:
-        dominant_letter = max(letter_count, key=letter_count.get)
-        return f"Letra predominante: {dominant_letter} (valor: {hebrew_values[dominant_letter]}, " \
-               f"aparece {letter_count[dominant_letter]} vezes, significado: {hebrew_letter_meanings[dominant_letter]})"
-    return "Nenhuma letra predominante identificada"
-
-def calculate_name_number(name):
-    """Calcula o número do nome com base nos valores hebraicos."""
-    hebrew_name = transliterate_name(name)
-    total = sum(hebrew_values.get(letter, 0) for letter in hebrew_name)
-    intermediate = total
-    while total > 9 and total not in [11, 22]:
-        total = sum(int(d) for d in str(total))
-    return total, intermediate, hebrew_name
-
-def calculate_birth_number(birth_date):
-    """Calcula o número da data de nascimento."""
-    digits = birth_date.replace('/', '')
-    total = sum(int(d) for d in digits)
-    intermediate = total
-    while total > 9 and total not in [11, 22]:
-        total = sum(int(d) for d in str(total))
-    return total, intermediate
-
-def map_high_number(number):
-    """Reduz números altos para valores entre 1 e 9 (ou 11, 22) e mapeia para caminhos, se possível."""
-    original = number
-    while number > 9 and number not in [11, 22]:
-        number = sum(int(d) for d in str(number))
-    reduced = number
-    path_number = original if 11 <= original <= 32 else None
-    if path_number and path_number in paths:
-        return f"Número reduzido: {reduced}, Mapeado ao Caminho {path_number}: {paths[path_number]['letra']} " \
-               f"({paths[path_number]['conexão']}), Significado: {paths[path_number]['significado']}"
-    return f"Número reduzido: {reduced} (associações: {number_traits.get(reduced, {'caracteristicas': 'Não mapeado'})['caracteristicas']})"
-
-def get_lucky_numbers(name_number, birth_number, name_intermediate, birth_intermediate):
-    """Determina os números da sorte."""
-    primary = [name_number, birth_number]
-    sum_numbers = name_number + birth_number
-    intermediate_sum = sum_numbers
-    while sum_numbers > 9 and sum_numbers not in [11, 22]:
-        sum_numbers = sum(int(d) for d in str(sum_numbers))
-    primary.append(sum_numbers)
-    secondary = [name_intermediate, birth_intermediate, intermediate_sum]
-    return list(set(primary)), list(set(secondary))
-
-def get_colors_and_traits(numbers):
-    """Retorna cores e características associadas aos números."""
-    colors = []
-    traits = []
-    for num in numbers:
-        if num in number_traits:
-            colors.extend(number_traits[num]["cores"])
-            traits.append({
-                "numero": num,
-                "caracteristicas": number_traits[num]["caracteristicas"],
-                "sefira": number_traits[num]["sefira"],
-                "letra": number_traits[num]["letra"],
-                "pedra": number_traits[num]["pedra"],
-                "elemento": number_traits[num]["elemento"]
-            })
-    return list(set(colors)), traits
-
-def get_path_info(number):
-    """Retorna informações sobre os caminhos da Árvore da Vida."""
-    if number in paths:
-        return f"Caminho {number}: {paths[number]['letra']} ({paths[number]['conexão']}), " \
-               f"Significado: {paths[number]['significado']}"
-    return None
-
-def get_hebrew_date_and_sign(birth_date):
-    """Converte a data gregoriana para o calendário hebraico e retorna a data e o signo."""
-    try:
-        date = datetime.strptime(birth_date, '%d/%m/%Y')
-        hdate = HDate(gdate=date)
-        month = hdate.month
-        hebrew_date = f"{hdate.day} de {hdate.month_name()} de {hdate.year}"
-        return hebrew_date, hebrew_signs.get(month, {"signo": "Desconhecido", "tribo": "", "letra": "", "qualidade": ""})
-    except Exception as e:
-        return f"Erro na conversão: {str(e)}", {"signo": "Desconhecido", "tribo": "", "letra": "", "qualidade": ""}
-
-def generate_report(name, birth_date):
-    """Gera um relatório numerológico cabalístico completo."""
-    try:
-        validate_date(birth_date)
-        name_number, name_intermediate, hebrew_name = calculate_name_number(name)
-        birth_number, birth_intermediate = calculate_birth_number(birth_date)
-        lucky_numbers, secondary_numbers = get_lucky_numbers(name_number, birth_number, name_intermediate, birth_intermediate)
-        colors, traits = get_colors_and_traits(lucky_numbers)
-        hebrew_date, hebrew_sign = get_hebrew_date_and_sign(birth_date)
-        dominant_letter = analyze_hebrew_letters(hebrew_name)
-
-        report = f"**Relatório Numerológico Cabalístico**\n"
-        report += f"Nome: {name}\n"
-        report += f"Data de Nascimento (Gregoriana): {birth_date}\n"
-        report += f"Data de Nascimento (Hebraica): {hebrew_date}\n"
-        report += f"\n**Números da Sorte**:\n"
-        report += f" - Primários: {', '.join(map(str, lucky_numbers))}\n"
-        report += f" - Secundários: {', '.join(map(str, secondary_numbers))}\n"
-        report += f"\n**Cores Associadas**: {', '.join(colors)}\n"
-        report += f"\n**Signo Hebraico**: {hebrew_sign['signo']}\n"
-        report += f" - Tribo: {hebrew_sign['tribo']}\n"
-        report += f" - Letra: {hebrew_sign['letra']}\n"
-        report += f" - Qualidade: {hebrew_sign['qualidade']}\n"
-        report += f"\n**Análise do Nome**:\n"
-        report += f" - Nome em Hebraico: {hebrew_name}\n"
-        report += f" - {dominant_letter}\n"
-        report += f"\n**Características e Associações Cabalísticas**:\n"
-        for trait in traits:
-            report += f"\nNúmero {trait['numero']}:\n"
-            report += f" - Características: {trait['caracteristicas']}\n"
-            report += f" - Sefirá: {trait['sefira']}\n"
-            report += f" - Letra Hebraica: {trait['letra']}\n"
-            report += f" - Pedra Preciosa: {trait['pedra']}\n"
-            report += f" - Elemento: {trait['elemento']}\n"
-        report += f"\n**Caminhos da Árvore da Vida e Análise de Números Secundários**:\n"
-        for num in secondary_numbers:
-            path_info = get_path_info(num)
-            if path_info:
-                report += f" - {path_info}\n"
-            else:
-                report += f" - Número {num}: {map_high_number(num)}\n"
-        return report
-    except ValueError as e:
-        return f"Erro: {str(e)}"
-
-# Interface Streamlit
-def main():
-    st.set_page_config(page_title="Numerologia Cabalística", page_icon="✡️", layout="wide")
-
-    # Título e descrição
-    st.markdown("""
-        <h1 style='text-align: center; color: #4B0082;'>Numerologia Cabalística</h1>
-        <p style='text-align: center; font-size: 18px;'>Descubra os segredos do seu nome e data de nascimento com base na Cabala e no calendário hebraico.</p>
-    """, unsafe_allow_html=True)
-
-    # Exibir a imagem da Árvore da Vida
-    st.image(
-        "https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPOSITORIO/main/Kabbalah/lifetree.png",
+        "https://raw.githubusercontent.com/cesarvalentimjr/kabbalah/main/Kabbalah/lifetree.png",
         caption="Ilustração da Árvore da Vida Cabalística",
         use_column_width=True
-    )  # Atualize o URL com o link bruto do GitHub[](https://medium.com/analytics-vidhya/ep5-adding-media-files-in-our-streamlit-web-app-74564af03642)
+    )
 
     # Layout com duas colunas
     col1, col2 = st.columns([1, 2])
@@ -300,7 +119,7 @@ def main():
     with col2:
         st.subheader("Relatório Numerológico")
         if 'report' in st.session_state:
-            st.markdown(st.session_state['report'])
+            st.markdown(st.session_state['report'], unsafe_allow_html=True)
         else:
             st.info("Preencha os dados à esquerda e clique em 'Gerar Relatório' para visualizar o resultado.")
 
