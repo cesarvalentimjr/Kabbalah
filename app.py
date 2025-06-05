@@ -92,7 +92,7 @@ paths = {
 }
 
 # Signos hebraicos por mês hebraico (aproximação manual)
-    """Converte a data gregoriana para o calendário hebraico e retorna a data e o signo (aproximação manual)."""
+  #  """Converte a data gregoriana para o calendário hebraico e retorna a data e o signo (aproximação manual)."""
     month = int(birth_date.split('/')[1])
     hebrew_date = f"Aproximado: {birth_date} (baseado no mês gregoriano)"
     return hebrew_date, hebrew_signs.get(month, {"signo": "Desconhecido", "tribo": "", "letra": "", "qualidade": ""})
