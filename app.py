@@ -1,7 +1,7 @@
 import streamlit as st
 from datetime import datetime
 import re
-from pyluach import dates
+from pyluach.dates import GregorianDate, HebrewDate
 
 # Dicionário com valores numéricos das letras hebraicas
 hebrew_values = {
@@ -214,10 +214,10 @@ def get_hebrew_date_and_sign(birth_date):
     """Converte a data gregoriana para o calendário hebraico e retorna a data e o signo."""
     try:
         date = datetime.strptime(birth_date, '%d/%m/%Y')
-        hdate = dates.Gregorian.from_datetime(date).to_heb()
-        month = hdate.month
-        hebrew_date = f"{hdate.day} de {hdate.month_name} de {hdate.year}"
-        return hebrew_date, hebrew_signs.get(month, {"signo": "Desconhecido", "tribo": "", "letra": "", "qualidade": ""})
+        hdate = dates.GregorianDate(date.year, date.month, date.day).to_heb()
+        hebrew_month_name = hdate.month_name(hebrew=True)
+        hebrew_date = f"{hdate.day} de {hebrew_month_name} de {hdate.year}"
+        return hebrew_date, hebrew_signs.get(hdate.month, {"signo": "Desconhecido", "tribo": "", "letra": "", "qualidade": ""})
     except AttributeError as e:
         return f"Erro na conversão: Problema com o módulo pyluach ({str(e)})", {"signo": "Desconhecido", "tribo": "", "letra": "", "qualidade": ""}
     except Exception as e:
@@ -237,7 +237,7 @@ def generate_report(name, birth_date):
         report = f"**Relatório Numerológico Cabalístico**\n"
         report += f"Nome: {name}\n"
         report += f"Data de Nascimento (Gregoriana): {birth_date}\n"
-        # report += f"Data de Nascimento (Hebraica): {hebrew_date}\n"
+        report += f"Data de Nascimento (Hebraica): {hebrew_date}\n"
         report += f"\n**Números da Sorte**:\n"
         report += f" - Primários: {', '.join(map(str, lucky_numbers))}\n"
         report += f" - Secundários: {', '.join(map(str, secondary_numbers))}\n"
@@ -279,13 +279,11 @@ def main():
     """, unsafe_allow_html=True)
 
     # Exibir a imagem da Árvore da Vida
-  logo = Image.open("lifetree.png")
-        col1, col2 = st.columns([1, 6])
-        with col1:
-            st.image(logo, width=100)
-        with col2:
-            st.title("Cabala")
-
+    st.image(
+        "https://raw.githubusercontent.com/cesarvalentimjr/Kabbalah/main/Kabbalah/lifetree.png",
+        caption="Ilustração da Árvore da Vida Cabalística",
+        use_container_width=True
+    )
 
     # Layout com duas colunas
     col1, col2 = st.columns([1, 2])
