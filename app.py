@@ -214,7 +214,7 @@ def get_hebrew_date_and_sign(birth_date):
     """Converte a data gregoriana para o calendário hebraico e retorna a data e o signo."""
     try:
         date = datetime.strptime(birth_date, '%d/%m/%Y')
-        hdate = dates.Gregorian.from_datetime(date).to_heb()
+        hdate = dates.GregorianDate.from_datetime(date).to_heb()
         month = hdate.month
         hebrew_date = f"{hdate.day} de {hdate.month_name} de {hdate.year}"
         return hebrew_date, hebrew_signs.get(month, {"signo": "Desconhecido", "tribo": "", "letra": "", "qualidade": ""})
@@ -280,8 +280,8 @@ def main():
     st.image(
         "https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPOSITORIO/main/Kabbalah/lifetree.png",
         caption="Ilustração da Árvore da Vida Cabalística",
-        use_column_width=True
-    )  # Atualize o URL com o link bruto do GitHub
+        use_container_width=True
+    )  # Substituído use_column_width por use_container_width
 
     # Layout com duas colunas
     col1, col2 = st.columns([1, 2])
