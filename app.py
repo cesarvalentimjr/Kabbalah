@@ -1,7 +1,7 @@
 import streamlit as st
 from datetime import datetime
 import re
-from pyluach import dates, hebrewcal
+from pyluach import dates
 
 # Dicionário com valores numéricos das letras hebraicas
 hebrew_values = {
@@ -95,7 +95,7 @@ paths = {
 # Signos hebraicos por mês hebraico
 hebrew_signs = {
     1: {"signo": "Nisan (Áries)", "tribo": "Judá", "letra": "Heh (ה)", "qualidade": "Liderança"},
-    2: {"signo": "Iyar (Touro)", "tribo": "Issacar", "letra": "Vav (ו)", "qualidade": "Estabilidade"},
+    2: {"signo": "Iyar (Touro)", "tribo": "Issacar", "letra": "Vav (و)", "qualidade": "Estabilidade"},
     3: {"signo": "Sivan (Gêmeos)", "tribo": "Zebulom", "letra": "Zayin (ז)", "qualidade": "Comunicação"},
     4: {"signo": "Tammuz (Câncer)", "tribo": "Rúben", "letra": "Chet (ח)", "qualidade": "Sensibilidade"},
     5: {"signo": "Av (Leão)", "tribo": "Simeão", "letra": "Tet (ט)", "qualidade": "Coragem"},
@@ -279,10 +279,11 @@ def main():
     """, unsafe_allow_html=True)
 
     # Exibir a imagem da Árvore da Vida
-    #st.image(lifetree.png",
-      #  caption="Ilustração da Árvore da Vida Cabalística",
-       # use_container_width=True
-   # )  # Substitua SEU_USUARIO e SEU_REPOSITORIO pelo seu usuário e repositório
+    st.image(
+        "https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPOSITORIO/main/Kabbalah/lifetree.png",
+        caption="Ilustração da Árvore da Vida Cabalística",
+        use_container_width=True
+    )
 
     # Layout com duas colunas
     col1, col2 = st.columns([1, 2])
