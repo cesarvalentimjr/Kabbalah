@@ -95,7 +95,7 @@ paths = {
 # Signos hebraicos por mês hebraico
 hebrew_signs = {
     1: {"signo": "Nisan (Áries)", "tribo": "Judá", "letra": "Heh (ה)", "qualidade": "Liderança"},
-    2: {"signo": "Iyar (Touro)", "tribo": "Issacar", "letra": "Vav (و)", "qualidade": "Estabilidade"},
+    2: {"signo": "Iyar (Touro)", "tribo": "Issacar", "letra": "Vav (ו)", "qualidade": "Estabilidade"},
     3: {"signo": "Sivan (Gêmeos)", "tribo": "Zebulom", "letra": "Zayin (ז)", "qualidade": "Comunicação"},
     4: {"signo": "Tammuz (Câncer)", "tribo": "Rúben", "letra": "Chet (ח)", "qualidade": "Sensibilidade"},
     5: {"signo": "Av (Leão)", "tribo": "Simeão", "letra": "Tet (ט)", "qualidade": "Coragem"},
@@ -214,7 +214,7 @@ def get_hebrew_date_and_sign(birth_date):
     """Converte a data gregoriana para o calendário hebraico e retorna a data e o signo."""
     try:
         date = datetime.strptime(birth_date, '%d/%m/%Y')
-        hdate = dates.GregorianDate(date.year, date.month, date.day).to_heb()
+        hdate = GregorianDate(date.year, date.month, date.day).to_heb()
         hebrew_month_name = hdate.month_name(hebrew=True)
         hebrew_date = f"{hdate.day} de {hebrew_month_name} de {hdate.year}"
         return hebrew_date, hebrew_signs.get(hdate.month, {"signo": "Desconhecido", "tribo": "", "letra": "", "qualidade": ""})
@@ -290,8 +290,8 @@ def main():
 
     with col1:
         st.subheader("Insira seus dados")
-        name = st.text_input("Nome completo", placeholder="Ex.: Maylan Passos Oliveira")
-        birth_date = st.text_input("Data de nascimento (DD/MM/YYYY)", placeholder="Ex.: 02/03/1982")
+        name = st.text_input("Nome completo", placeholder="Ex.: Maria Santos")
+        birth_date = st.text_input("Data de nascimento (DD/MM/YYYY)", placeholder="Ex.: 02/07/1975")
         if st.button("Gerar Relatório"):
             if name and birth_date:
                 report = generate_report(name, birth_date)
