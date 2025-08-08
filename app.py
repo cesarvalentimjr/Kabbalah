@@ -279,10 +279,10 @@ def main():
     """, unsafe_allow_html=True)
 
     # Exibir a imagem da Árvore da Vida
-    st.image(
-        "https://raw.githubusercontent.com/cesarvalentimjr/Kabbalah/main/Kabbalah/lifetree.png",
-        caption="Ilustração da Árvore da Vida Cabalística",
-        use_container_width=True
+   st.image(
+    "https://raw.githubusercontent.com/cesarvalentimjr/Kabbalah/main/lifetree.png",
+    caption="Ilustração da Árvore da Vida Cabalística",
+    use_container_width=True
     )
 
     # Layout com duas colunas
@@ -308,3 +308,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
